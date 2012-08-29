@@ -9,7 +9,7 @@ Author URI: http://saalonmuyo.com
 License: GPL2
 */
 
-/*  Copyright 2011  Eric Sipple  (email : saalon@gmail.com)
+/*  Copyright 2012  Eric Sipple  (email : saalon@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
