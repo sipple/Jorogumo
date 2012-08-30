@@ -1,6 +1,6 @@
 <?php
   // Hack:
-  define('AUTOLOADER_INCLUDE_ROOT', realpath(ABSPATH . "/wp-content/plugins/Festivity/"));
+  define('AUTOLOADER_INCLUDE_ROOT', realpath(ABSPATH . "/wp-content/plugins/Jorogumo/"));
 
   /**
    * This is an autoloader.  It will load things automatically.  Specifically, it'll find classes
