@@ -1,10 +1,31 @@
 <?php
 
 
+if( ! function_exists('joro_show_feature_posts') ) :
+/**
+ * Returns a festivity date filter select box based on the festival's start and end dates
+ */
+function joro_show_feature_posts($search = 'recent', $order = 'date', $numberposts = 3) {
+  $posts_results = joro_find_posts($search, $order, $numberposts);
+  echo joro_feature_posts($posts_results);
+}
+endif;
+
+if( ! function_exists('joro_show_list_posts') ) :
+/**
+ * Returns a festivity date filter select box based on the festival's start and end dates
+ */
+function joro_show_list_posts($search = 'recent', $order = 'date', $numberposts = 3) {
+  $posts_results = joro_find_posts($search, $order, $numberposts);
+  echo joro_list_posts($posts_results);
+}
+endif;
+
 if ( ! function_exists( 'joro_recent_posts_func' ) ) :
 /**
- * Prints HTML with each of the event's performances
- *
+ * Shortcode to display feature or list views of recent or random
+ * posts. Can pull all, by current post category, or by current post
+ * tags.
  */
 
 function joro_func($atts) {
@@ -32,7 +53,6 @@ add_shortcode( 'joro', 'joro_func' );
 endif;
 
 function joro_find_posts($search_type, $search_order, $numberposts) {
-
   $args = array(
       'numberposts'     => $numberposts,
       'offset'          => 0,
@@ -40,7 +60,7 @@ function joro_find_posts($search_type, $search_order, $numberposts) {
       'order'           => 'DESC',
       'post_type'       => 'post',
       'post_status'     => 'publish',
-      'suppress_filters' => true );
+      'suppress_filters' => false );
 
   if ($search_type == 'category') {
     $category_ids = joro_get_post_categories();
@@ -54,8 +74,11 @@ function joro_find_posts($search_type, $search_order, $numberposts) {
   if ($search_order == "random") {
     $args = array_merge($args, array( 'orderby' => 'rand' ));
   }
+  add_filter( 'posts_where', 'joro_restrict_by_date' );
+  $post_results = get_posts($args);
+  remove_filter( 'posts_where', 'joro_restrict_by_date' );
 
-  return get_posts($args);
+  return $post_results;
 
 }
 
@@ -78,9 +101,9 @@ function joro_get_post_tags() {
   return $tag_ids;
 }
 
-function joro_feature_posts($posts, $title) {
+function joro_feature_posts($posts) {
 
-  $feature_html = '<div class="row-fluid"><h2>%1$s</h2><ul class="thumbnails">%2$s</ul></div>';
+  $feature_html = '<div class="row-fluid"><ul class="thumbnails">%1$s</ul></div>';
 
   $post_divs = "";
 
@@ -91,17 +114,17 @@ function joro_feature_posts($posts, $title) {
 
   }
 
-  return sprintf($feature_html,$title, $post_divs);
+  return sprintf($feature_html, $post_divs);
 
 }
 
 function joro_list_posts($posts) {
 
-  $list_html = '<div class="joro-post-list">%s</div>';
+  $list_html = '<ul class="joro-post-list">%s</ul>';
   $post_divs = "";
 
   foreach ($posts as $list_post) {
-    $post_div_html = '<div class="joro-listed-post"><span class="joro-post-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></div>';
+    $post_div_html = '<li class="joro-listed-post"><span class="joro-post-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></li>';
     $post_divs .= sprintf($post_div_html, get_permalink($list_post->ID), $list_post->post_title, $list_post->post_title);
   }
 
@@ -129,6 +152,12 @@ function joro_post_image_url ($post_id)
     }
   }
   return $image_url[0];
+}
+
+function joro_restrict_by_date($where = '') {
+  global $wpdb;
+  $earliest_date = date('Y-m-d', mktime(0, 0, 0, date("m") , date("d"), date("Y") - 2));
+  return $where .= $wpdb->prepare( " AND post_date >= %s ", $earliest_date);
 }
 
 ?>
