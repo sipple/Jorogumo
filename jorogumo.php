@@ -31,7 +31,18 @@ class Jorogumo {
 
   // set up the initialization hooks for the plugin
   function __construct() {
+    require_once "lib/jorogumo_autoloader.php";
+    require_once 'lib/jorogumo_shortcode.php';
+    add_action('init', array(__CLASS__, 'enqueueScripts'));
+  }
 
+  function enqueueScripts() {
+    add_action('wp_print_styles', array(__CLASS__, 'enqueueCSS'));
+  }
+
+  public static function enqueueCSS() {
+    wp_enqueue_style('jorogumoStyle', plugins_url( "/Jorogumo/lib/css/jorogumo.css"));
+    wp_enqueue_style('jorogumoBootstrap', plugins_url( "/Jorogumo/lib/css/bootstrap.css"));
   }
 
 }

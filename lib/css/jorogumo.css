@@ -1,0 +1,21 @@
+.joro-post-title {
+  text-align: center;
+  font-variant: small-caps;
+  font-size: 1.1em;
+  line-height: 2em;
+}
+
+.joro-featured-post {
+
+}
+
+.joro-post-image {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-top: 10px;
+}
+
+.joro-post-link {
+  text-decoration: none;
+}

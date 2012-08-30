@@ -12,12 +12,24 @@ function joro_func($atts) {
  		'style' => 'feature',
  		'search' => 'recent',
     'order' => 'date',
-    'numberposts' => 5
+    'numberposts' => 3,
+    'title' => 'Recent Posts'
  	), $atts ) );
+
+  $posts_results = find_posts($search, $order, $numberposts);
+
+  if($style == "list") {
+    return list_posts($posts_results);
+  }
+  else {
+    return feature_posts($posts_results, $title);
+  }
+
 }
 
 add_shortcode( 'joro', 'joro_func' );
 
+endif;
 
 function find_posts($search_type, $search_order, $numberposts) {
 
@@ -34,9 +46,13 @@ function find_posts($search_type, $search_order, $numberposts) {
     $category_ids = get_post_categories();
     $args = array_merge($args, array( 'category' => implode(',', $category_ids)));
   }
+  elseif ($search_type == "tag") {
+    $tag_ids = get_post_tags();
+    $args = array_merge($args, array( 'tag__in' => implode(',', $tag_ids)));
+  }
 
   if ($search_order == "random") {
-    $args = array_merge($args, array( 'orderby' => 'random' ));
+    $args = array_merge($args, array( 'orderby' => 'rand' ));
   }
 
   return get_posts($args);
@@ -53,14 +69,66 @@ function get_post_categories() {
   return $category_ids;
 }
 
-function feature_posts($posts) {
+function get_post_tags() {
+  $tags = get_the_tags();
+  $tag_ids = array();
+  foreach($tags as $tag) {
+    array_push($tag_ids, $tag->term_id);
+  }
+  return $tag_ids;
+}
+
+function feature_posts($posts, $title) {
+
+  $feature_html = '<div class="row-fluid"><h2>%1$s</h2><ul class="thumbnails">%2$s</ul></div>';
+
+  $post_divs = "";
+
+  foreach($posts as $feature_post) {
+    $image_url = post_image_url($feature_post->ID);
+    $post_div_html = '<li class="span4"><div class="thumbnail"><a class="joro-post-link" href="%1$s"><img class="joro-post-image img-rounded" src="%2$s" /></a><div class="joro-post-title"><a class="joro-post-link" href="%3$s" >%4$s</a></div></div></li>';
+    $post_divs .= sprintf($post_div_html, get_permalink($feature_post->ID), $image_url, get_permalink($feature_post->ID), $feature_post->post_title );
+
+  }
+
+  return sprintf($feature_html,$title, $post_divs);
 
 }
 
 function list_posts($posts) {
 
+  $list_html = '<div class="joro-post-list">%s</div>';
+  $post_divs = "";
+
+  foreach ($posts as $list_post) {
+    $post_div_html = '<div class="joro-listed-post"><span class="joro-post-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></div>';
+    $post_divs .= sprintf($post_div_html, get_permalink($list_post->ID), $list_post->post_title, $list_post->post_title);
+  }
+
+  return sprintf($list_html, $post_divs);
+
 }
 
-endif;
+  function post_image_url ($post_id)
+  {
+  	$args = array(
+  	'numberposts' => 1,
+  	'order'=> 'ASC',
+  	'post_mime_type' => 'image',
+  	'post_parent' => $post_id,
+  	'post_status' => null,
+  	'post_type' => 'attachment'
+  	);
+
+  	$attachments = get_children( $args );
+    $image_url = "";
+  	if ($attachments) {
+  		foreach($attachments as $attachment) {
+  			$image_url =  wp_get_attachment_image_src( $attachment->ID, 'thumbnail');
+
+  		}
+    }
+    return $image_url[0];
+  }
 
 ?>
