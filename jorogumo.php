@@ -32,7 +32,7 @@ class Jorogumo {
   // set up the initialization hooks for the plugin
   function __construct() {
     require_once "lib/jorogumo_autoloader.php";
-    require_once 'lib/jorogumo_shortcode.php';
+    require_once 'lib/jorogumo_functions.php';
     add_action('init', array(__CLASS__, 'enqueueScripts'));
   }
 
