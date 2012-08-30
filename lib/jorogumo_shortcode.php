@@ -16,7 +16,7 @@ function joro_func($atts) {
     'title' => 'Recent Posts'
  	), $atts ) );
 
-  $posts_results = find_posts($search, $order, $numberposts);
+  $posts_results = joro_find_posts($search, $order, $numberposts);
 
   if($style == "list") {
     return joro_list_posts($posts_results);
@@ -31,7 +31,7 @@ add_shortcode( 'joro', 'joro_func' );
 
 endif;
 
-function find_posts($search_type, $search_order, $numberposts) {
+function joro_find_posts($search_type, $search_order, $numberposts) {
 
   $args = array(
       'numberposts'     => $numberposts,
