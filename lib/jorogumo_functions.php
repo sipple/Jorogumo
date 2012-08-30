@@ -122,10 +122,24 @@ function joro_feature_posts($posts) {
 function joro_list_posts($posts) {
 
   $list_html = '<ul class="joro-post-list">%s</ul>';
+  $post_elements = "";
+
+  foreach ($posts as $list_post) {
+    $post_list_html = '<li class="joro-listed-post"><span class="joro-post-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></li>';
+    $post_elements .= sprintf($post_list_html, get_permalink($list_post->ID), $list_post->post_title, $list_post->post_title);
+  }
+
+  return sprintf($list_html, $post_elements);
+
+}
+
+function joro_widget_posts($posts) {
+
+  $list_html = '<ul class="joro-post-widget">%s</ul>';
   $post_divs = "";
 
   foreach ($posts as $list_post) {
-    $post_div_html = '<li class="joro-listed-post"><span class="joro-post-list-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></li>';
+    $post_div_html = '<li class="joro-widgeted-post"><h4 class="joro-post-widget-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></h4></li>';
     $post_divs .= sprintf($post_div_html, get_permalink($list_post->ID), $list_post->post_title, $list_post->post_title);
   }
 

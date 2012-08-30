@@ -77,7 +77,7 @@ class Jorogumo_Widget extends WP_Widget {
     echo $before_widget;
     if ( ! empty( $title ) )
       echo $before_title . $title . $after_title;
-    echo joro_list_posts($post_results);
+    echo joro_widget_posts($post_results);
     echo $after_widget;
 	}
 
