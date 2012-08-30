@@ -3,7 +3,7 @@
 Plugin Name: Jorogumo
 Plugin URI: http://saalonmuyo.com
 Description: Tools to keep readers on your site
-Version: 0.1
+Version: 0.5
 Author: Eric Sipple
 Author URI: http://saalonmuyo.com
 License: GPL2
