@@ -86,8 +86,8 @@ function feature_posts($posts, $title) {
 
   foreach($posts as $feature_post) {
     $image_url = post_image_url($feature_post->ID);
-    $post_div_html = '<li class="span4"><div class="thumbnail"><a class="joro-post-link" href="%1$s"><img class="joro-post-image img-rounded" src="%2$s" /></a><div class="joro-post-title"><a class="joro-post-link" href="%3$s" >%4$s</a></div></div></li>';
-    $post_divs .= sprintf($post_div_html, get_permalink($feature_post->ID), $image_url, get_permalink($feature_post->ID), $feature_post->post_title );
+    $post_div_html = '<li class="span4"><div class="thumbnail"><a class="joro-post-link" href="%1$s"><img class="joro-post-image img-rounded" src="%2$s" /></a><div class="joro-post-title"><a class="joro-post-link" href="%3$s" >%4$s</a><br/>%5$s</div></div></li>';
+    $post_divs .= sprintf($post_div_html, get_permalink($feature_post->ID), $image_url, get_permalink($feature_post->ID), $feature_post->post_title, mysql2date('F j, Y', $feature_post->post_date) );
 
   }
 
