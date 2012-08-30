@@ -5,8 +5,8 @@ if( ! function_exists('joro_show_feature_posts') ) :
 /**
  * Returns a festivity date filter select box based on the festival's start and end dates
  */
-function joro_show_feature_posts($search = 'recent', $order = 'date', $numberposts = 3) {
-  $posts_results = joro_find_posts($search, $order, $numberposts);
+function joro_show_feature_posts($search = 'recent', $order = 'date', $offset = 0, $numberposts = 3) {
+  $posts_results = joro_find_posts($search, $order, $numberposts, $offset);
   echo joro_feature_posts($posts_results);
 }
 endif;
@@ -15,8 +15,8 @@ if( ! function_exists('joro_show_list_posts') ) :
 /**
  * Returns a festivity date filter select box based on the festival's start and end dates
  */
-function joro_show_list_posts($search = 'recent', $order = 'date', $numberposts = 3) {
-  $posts_results = joro_find_posts($search, $order, $numberposts);
+function joro_show_list_posts($search = 'recent', $order = 'date', $offset = 0, $numberposts = 3) {
+  $posts_results = joro_find_posts($search, $order, $numberposts, $offset);
   echo joro_list_posts($posts_results);
 }
 endif;
@@ -34,7 +34,8 @@ function joro_func($atts) {
  		'search' => 'recent',
     'order' => 'date',
     'numberposts' => 3,
-    'title' => 'Recent Posts'
+    'title' => 'Recent Posts',
+    'offset' => 0
  	), $atts ) );
 
   $posts_results = joro_find_posts($search, $order, $numberposts);
@@ -52,10 +53,10 @@ add_shortcode( 'joro', 'joro_func' );
 
 endif;
 
-function joro_find_posts($search_type, $search_order, $numberposts) {
+function joro_find_posts($search_type, $search_order, $numberposts, $offset) {
   $args = array(
       'numberposts'     => $numberposts,
-      'offset'          => 0,
+      'offset'          => $offset,
       'orderby'         => 'post_date',
       'order'           => 'DESC',
       'post_type'       => 'post',
@@ -137,6 +138,7 @@ function joro_post_image_url ($post_id)
   $args = array(
   'numberposts' => 1,
   'order'=> 'ASC',
+  'orderby' => 'menu_order',
   'post_mime_type' => 'image',
   'post_parent' => $post_id,
   'post_status' => null,
