@@ -125,7 +125,7 @@ function joro_list_posts($posts) {
   $post_divs = "";
 
   foreach ($posts as $list_post) {
-    $post_div_html = '<li class="joro-listed-post"><span class="joro-post-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></li>';
+    $post_div_html = '<li class="joro-listed-post"><span class="joro-post-list-title"><a class="joro-post-title-link" href="%1$s" title="%2$s">%2$s</a></span></li>';
     $post_divs .= sprintf($post_div_html, get_permalink($list_post->ID), $list_post->post_title, $list_post->post_title);
   }
 
