@@ -34,6 +34,7 @@ class Jorogumo {
     require_once "lib/jorogumo_autoloader.php";
     require_once 'lib/jorogumo_functions.php';
     add_action('init', array(__CLASS__, 'enqueueScripts'));
+    add_action( 'widgets_init', create_function( '', 'register_widget( "jorogumo_widget" );' ) );
   }
 
   function enqueueScripts() {

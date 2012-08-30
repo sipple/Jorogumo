@@ -38,7 +38,7 @@ function joro_func($atts) {
     'offset' => 0
  	), $atts ) );
 
-  $posts_results = joro_find_posts($search, $order, $numberposts);
+  $posts_results = joro_find_posts($search, $order, $numberposts, $offset);
 
   if($style == "list") {
     return joro_list_posts($posts_results);
