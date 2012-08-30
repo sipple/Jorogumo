@@ -19,10 +19,10 @@ function joro_func($atts) {
   $posts_results = find_posts($search, $order, $numberposts);
 
   if($style == "list") {
-    return list_posts($posts_results);
+    return joro_list_posts($posts_results);
   }
   else {
-    return feature_posts($posts_results, $title);
+    return joro_feature_posts($posts_results, $title);
   }
 
 }
@@ -43,11 +43,11 @@ function find_posts($search_type, $search_order, $numberposts) {
       'suppress_filters' => true );
 
   if ($search_type == 'category') {
-    $category_ids = get_post_categories();
+    $category_ids = joro_get_post_categories();
     $args = array_merge($args, array( 'category' => implode(',', $category_ids)));
   }
   elseif ($search_type == "tag") {
-    $tag_ids = get_post_tags();
+    $tag_ids = joro_get_post_tags();
     $args = array_merge($args, array( 'tag__in' => implode(',', $tag_ids)));
   }
 
@@ -59,7 +59,7 @@ function find_posts($search_type, $search_order, $numberposts) {
 
 }
 
-function get_post_categories() {
+function joro_get_post_categories() {
   $categories = get_the_category($post->ID);
   $category_ids = array();
   foreach ($categories as $category) {
@@ -69,7 +69,7 @@ function get_post_categories() {
   return $category_ids;
 }
 
-function get_post_tags() {
+function joro_get_post_tags() {
   $tags = get_the_tags();
   $tag_ids = array();
   foreach($tags as $tag) {
@@ -78,14 +78,14 @@ function get_post_tags() {
   return $tag_ids;
 }
 
-function feature_posts($posts, $title) {
+function joro_feature_posts($posts, $title) {
 
   $feature_html = '<div class="row-fluid"><h2>%1$s</h2><ul class="thumbnails">%2$s</ul></div>';
 
   $post_divs = "";
 
   foreach($posts as $feature_post) {
-    $image_url = post_image_url($feature_post->ID);
+    $image_url = joro_post_image_url($feature_post->ID);
     $post_div_html = '<li class="span4"><div class="thumbnail"><a class="joro-post-link" href="%1$s"><img class="joro-post-image img-rounded" src="%2$s" /></a><div class="joro-post-title"><a class="joro-post-link" href="%3$s" >%4$s</a><br/>%5$s</div></div></li>';
     $post_divs .= sprintf($post_div_html, get_permalink($feature_post->ID), $image_url, get_permalink($feature_post->ID), $feature_post->post_title, mysql2date('F j, Y', $feature_post->post_date) );
 
@@ -95,7 +95,7 @@ function feature_posts($posts, $title) {
 
 }
 
-function list_posts($posts) {
+function joro_list_posts($posts) {
 
   $list_html = '<div class="joro-post-list">%s</div>';
   $post_divs = "";
@@ -109,26 +109,26 @@ function list_posts($posts) {
 
 }
 
-  function post_image_url ($post_id)
-  {
-  	$args = array(
-  	'numberposts' => 1,
-  	'order'=> 'ASC',
-  	'post_mime_type' => 'image',
-  	'post_parent' => $post_id,
-  	'post_status' => null,
-  	'post_type' => 'attachment'
-  	);
+function joro_post_image_url ($post_id)
+{
+  $args = array(
+  'numberposts' => 1,
+  'order'=> 'ASC',
+  'post_mime_type' => 'image',
+  'post_parent' => $post_id,
+  'post_status' => null,
+  'post_type' => 'attachment'
+  );
 
-  	$attachments = get_children( $args );
-    $image_url = "";
-  	if ($attachments) {
-  		foreach($attachments as $attachment) {
-  			$image_url =  wp_get_attachment_image_src( $attachment->ID, 'thumbnail');
+  $attachments = get_children( $args );
+  $image_url = "";
+  if ($attachments) {
+    foreach($attachments as $attachment) {
+      $image_url =  wp_get_attachment_image_src( $attachment->ID, 'thumbnail');
 
-  		}
     }
-    return $image_url[0];
   }
+  return $image_url[0];
+}
 
 ?>
